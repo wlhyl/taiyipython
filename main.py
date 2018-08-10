@@ -4,7 +4,7 @@ from PyQt5 import QtWidgets
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from shipan.shipan import ShiPan, ShiJiShiPan
+from shipan.shipan import ShiPan, YueJiShiPan, RiJiShiPan, ShiJiShiPan
 
 # Create application
 app = QtWidgets.QApplication(sys.argv)
@@ -93,6 +93,11 @@ juTypeInput = QtWidgets.QComboBox()
 juTypeInput.addItems(["年计太乙", "月计太乙", "日计太乙", "时计太乙"])
 rightVBoxLayout.addWidget(juTypeInput)
 
+yueJiang = QtWidgets.QComboBox()
+yueJiang.addItems(["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"])
+rightVBoxLayout.addWidget(QtWidgets.QLabel("月将"))
+rightVBoxLayout.addWidget(yueJiang)
+
 button = QtWidgets.QPushButton("起太乙局")
 rightVBoxLayout.addWidget(button)
 # rightVBoxLayout.addStretch()
@@ -135,6 +140,60 @@ def 年计():
     # textBrowser.setText("{}".format(s))
 
 
+def 月计():
+    yearText = yearInput.text()
+    if yearText == "":
+        yearText = "0"
+    year = int(yearText)
+    month = int("0{}".format(monthInput.text()))
+    # year = int("0{}".format(yearInput.text()))
+    # year = int("0{}".format(yearInput.text()))
+#     month = monthInput.currentIndex()+1
+#     juType=juTypeInput.currentIndex()
+    # day = int("0{}".format(dayInput.text()))
+    # hour = int("0{}".format(hourInput.text()))
+    # minutes = int("0{}".format(minutesInput.text()))
+    if year == 0 or month < 1 or month > 12:
+        QtWidgets.QMessageBox.information(None, "OK", "输入时间不正确",
+                                          QtWidgets.QMessageBox.Ok,
+                                          QtWidgets.QMessageBox.Ok)
+        return
+    s = YueJiShiPan(year, month)
+    textBrowser.setHtml("{}".format(s))
+
+
+def 日计():
+    yearText = yearInput.text()
+    if yearText == "":
+        yearText = "0"
+    year = int(yearText)
+    month = int("0{}".format(monthInput.text()))
+    # year = int("0{}".format(yearInput.text()))
+    # year = int("0{}".format(yearInput.text()))
+#     month = monthInput.currentIndex()+1
+#     juType=juTypeInput.currentIndex()
+    day = int("0{}".format(dayInput.text()))
+    # hour = int("0{}".format(hourInput.text()))
+    # minutes = int("0{}".format(minutesInput.text()))
+    if year == 0 or month < 1 or month > 12:
+        QtWidgets.QMessageBox.information(None, "OK", "输入时间不正确",
+                                          QtWidgets.QMessageBox.Ok,
+                                          QtWidgets.QMessageBox.Ok)
+        return
+    timeString = "{0:04d}-{1:02d}-{2:02d} 00:00:00"
+    timeString = timeString.format(year, month, day)
+    try:
+        datetime.datetime.strptime(timeString, "%Y-%m-%d %H:%M:%S")
+    except ValueError as e:
+        QtWidgets.QMessageBox.information(None, "OK",
+                                          "输入时间{}不正确".format(timeString),
+                                          QtWidgets.QMessageBox.Ok,
+                                          QtWidgets.QMessageBox.Ok)
+        return
+    s = RiJiShiPan(year, month, day)
+    textBrowser.setHtml("{}".format(s))
+
+
 def 时计():
     year = int("0{}".format(yearInput.text()))
     month = int("0{}".format(monthInput.text()))
@@ -162,7 +221,9 @@ def 时计():
                                           QtWidgets.QMessageBox.Ok,
                                           QtWidgets.QMessageBox.Ok)
         return
-    s = ShiJiShiPan(year, month, day, hour, minutes, second)
+    DiZHiList = ["子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"]
+    月将=DiZHiList[yueJiang.currentIndex()]
+    s = ShiJiShiPan(year, month, day, hour, minutes, second, 月将)
     # print(string(shiPan))
     textBrowser.setHtml("{}".format(s))
     # textBrowser.setText("{}".format(s))
@@ -172,6 +233,12 @@ def onclick():
     juType = juTypeInput.currentIndex()
     if juType == 0:
         年计()
+        return
+    if juType == 1:
+        月计()
+        return
+    if juType == 2:
+        日计()
         return
     if juType == 3:
         时计()
@@ -190,50 +257,8 @@ class HelpDialog(QtWidgets.QDialog):
         self.setLayout(helpLayout)
         helpTextBrowser = QtWidgets.QTextBrowser()
         helpLayout.addWidget(helpTextBrowser)
-        helpStrings = ("<div><font style=font-weight:bold;>说明：</font></div>"
-                       "<div>八三四九为阳宫，二七六一为阴宫</div>"
-                       "<div>太乙在一、八、三、四宫为内，助主；太乙在九、二、七、六宫为在外，助客 </div>"
-                       "<div>阴阳易绝之气举事皆凶</div>"
-                       "<div> 数 &lt; 10: 无天之算 </div>"
-                       "<div> 数 % 10 &lt; 5: 无地之算 </div>"
-                       "<div> 数 % 10 == 0: 无人之算 </div>"
-                       "<div>开休生大吉，景小吉，惊小凶，杜死伤大凶</div>"
-                       "<div><font style=font-weight:bold;color:red>格局：</font>"
-                       "</div>"
-                       "<div><font style=font-weight:bold;>掩 ：</font><div>"
-                       "《经》曰：始击将临太乙宫，谓之掩。岁计遇之，王纲失序，臣强群弱，宜修德以禳之。"
-                       "盖掩袭劫杀之义。若掩太乙在阳绝之地，君凶；阴绝之地，臣诛。掩主大将，主人算和，"
-                       "吉；不和凶。参将击之胜。</div></div>"
-                       "<div><font style=font-weight:bold;>击：</font><div>《经》曰："
-                       "太乙所在宫，客目在太乙前一辰，为前击；在太乙后一辰，为后击；在太乙前一宫，为外宫击；"
-                       "在太乙后一宫，为内宫击。所为击者，臣凌君卑。凌尊，下凌上，僭也。岁计遇之，将相相伐之义也。"
-                       "</div></div>"
-                       "<div><font style=font-weight:bold;>迫：</font><div>《经》曰："
-                       "前为外迫，后为内迫，为上、下二目，主、客大小四将，在太乙左右为迫。"
-                       "王希明曰：下目无迫。若上目在太乙前一辰，为外辰迫；在后一辰，为内辰迫； 在太乙前一宫，"
-                       "为外宫迫；后一宫，为内宫迫。宫迫，灾微缓；"
-                       "辰迫，灾急疾。岁计遇迫，人君慎之。</div></div>"
-                       "<div><font style=font-weight:bold;>囚：</font><div>《经》曰："
-                       "囚者，篡戮之义也。若文昌将并主、客、大、小四将俱与太乙同宫，总名曰囚。"
-                       "若在易气、绝气之地，大凶；若在绝阳、绝阴之地，自败，臣受诛。若诸将与太乙同宫，或近大将，"
-                       "谋在同类；近参将，谋在内也。算和者，利；算不和者，谋不成也。"
-                       "（中国古代星占学，靠近天目者谋在内及同姓，近地目者谋在外及异姓。若算和谋成，"
-                       "算不和则谋不成。）</div></div>"
-                       "<div><font style=font-weight:bold;>关：</font><div>《经》曰："
-                       "客、主、大、小将目相宫齐为关。王希明曰：关之为义，但将相怕忌之事，不及于君也。"
-                       "主、客、大、小将同宫数齐，皆为关日。 </div></div>"
-                       "<div><font style=font-weight:bold;>格：</font><div>《经》曰："
-                       "客目、大、小将与太乙对宫为格，言政事上下格也。若在阳绝之地，又与岁计遇格，不利。"
-                       "有为所格者，格易之义也，若格太乙者，盗侮其君，主客算不知者必败。</div></div>"
-                       "<div><font style=font-weight:bold;>对：</font><div>《经》曰："
-                       "下目文昌将与太乙冲而相当都为对，若下目相对之时皆为大臣怀二心，君逐良将，凶奸生，下"
-                       "臣欺上。</div></div>"
-                       "<div><font style=font-weight:bold;>四郭固：</font><div>"
-                       "《经》曰："
-                       "四郭固者，文昌将囚太乙宫，至大将参将又相关，或客目临之或客大小将相关，皆四郭固也。"
-                       "主人胜固者凭胜不利先起四郭之固岁计遇之主篡废之祸利以修德禳之也。"
-                       "《太乙通解》四郭固是指天子之都邑，四面皆有城墙，宜坚壁固守，谨防灾变。</div></div>"
-                       )
+        with open('help/help.html', 'r') as f:
+            helpStrings = f.read()
         helpFont = QtGui.QFont()
         helpFont.setPixelSize(18)
         helpTextBrowser.setFont(helpFont)
