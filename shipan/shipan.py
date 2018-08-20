@@ -18,6 +18,7 @@ class ShiPan():
     岁实整数 = 365
     岁实分子 = 7877
     岁实分母 = 32193
+    三基积年 = 284287
 
     def __init__(self, y=1, m=0, d=0, h=0, minute=0, sec=0):
         self.year = y
@@ -67,7 +68,11 @@ class ShiPan():
         self.get定将()
 
         self.get格局()
+        self.get君基()
+        self.get臣基()
+        self.get民基()
         self.get五福()
+        self.get大游()
 
     def __str__(self):
         __css = '''
@@ -112,40 +117,8 @@ td{
     def set(self, s, p):
         self.shiPan[p.x][p.y].append(s)
 
-    # def __get宫数For间辰(self, p):
-    #     if not isinstance(p, JianChenPoint):
-    #         raise ValueError("参数只能是JianChenPoint")
-    #
-    #     if p.x == 0 and p.y == 0:
-    #         return 9
-    #     if p.x == 4 and p.y == 0:
-    #         return 3
-    #     if p.x == 4 and p.y == 4:
-    #         return 1
-    #     if p.x == 0 and p.y == 4:
-    #         return 7
-    #     if p.x == 0 and p.y == 2:
-    #         return 2
-    #     if p.x == 2 and p.y == 0:
-    #         return 4
-    #     if p.x == 4 and p.y == 2:
-    #         return 8
-    #     if p.x == 2 and p.y == 4:
-    #         return 6
-    #     return 0
-
     def init(self):
-        y = self.year
-
-        __积年 = self.太乙积年 + y
-        if y < 0:
-            __积年 = self.太乙积年 + 1 + y
-
-        __年干支 = 干支(干("甲"), 支("子")) + (__积年 % 60 - 1)
-
-        self.积算 = __积年
-        self.header = "{} <div>干支: {} </div> <div>年计太乙</div>".format(
-            self.header, __年干支)
+        pass
 
     def is阳遁(self):
         return True
@@ -205,23 +178,7 @@ td{
         self.header = "{}{}".format(self.header, __printString)
 
         __太乙 = '<div style = "color:#F00" >太乙</div>'
-        # if 太乙宫数 == 1:
-        #     self.__太乙 = JianChenPoint(4, 4)
-        # elif 太乙宫数 == 2:
-        #     self.__太乙 = JianChenPoint(0, 2)
-        # elif 太乙宫数 == 3:
-        #     self.__太乙 = JianChenPoint(4, 0)
-        # elif 太乙宫数 == 4:
-        #     self.__太乙 = JianChenPoint(2, 0)
-        # elif 太乙宫数 == 6:
-        #     self.__太乙 = JianChenPoint(2, 4)
-        # elif 太乙宫数 == 7:
-        #     self.__太乙 = JianChenPoint(0, 4)
-        # elif 太乙宫数 == 8:
-        #     self.__太乙 = JianChenPoint(4, 2)
-        # else:
-        #     self.__太乙 = JianChenPoint(0, 0)
-        # self.__set(太乙, self.__太乙)
+
         self.太乙 = Get九宫Point(__太乙宫数)
         self.set(__太乙, self.太乙)
 
@@ -592,6 +549,91 @@ td{
         for i in __格局Func:
             i()
 
+    def get君基(self):
+        pass
+
+    def get臣基(self):
+        pass
+
+    def get民基(self):
+        pass
+
+    def get五福(self):
+        # http://www.fengshui-168.com/thread-45937-1-1.html?_dsign=6ee23359
+        pass
+
+    def get大游(self):
+        pass
+
+
+class NianJiShiPan(ShiPan):
+    def __init__(self, y):
+        super().__init__(y)
+
+    def init(self):
+        y = self.year
+
+        __积年 = self.太乙积年 + y
+        if y < 0:
+            __积年 = self.太乙积年 + 1 + y
+
+        __年干支 = 干支(干("甲"), 支("子")) + (__积年 % 60 - 1)
+
+        self.积算 = __积年
+        self.header = "{} <div>干支: {} </div> <div>年计太乙</div>".format(
+            self.header, __年干支)
+
+    def get君基(self):
+        __jn = self.三基积年 + self.year
+        if self.year < 0:
+            __jn = __jn + 1
+        jn = __jn % 360
+        if jn == 0:
+            jn = 360
+        rg = jn // 30
+        rn = jn % 30
+        if rn == 0:
+            rg = rg - 1
+            rn = 30
+        rg = rg + 1
+        xu = 支("戌")
+        junJi = xu + (rg - 1)
+        junJiPoint = Get间辰Point("{}".format(junJi))
+        __junJi = '<font color="green"><b>君基</b></font>'
+        self.set(__junJi, junJiPoint)
+
+    def get臣基(self):
+        __jn = self.三基积年 + self.year
+        if self.year < 0:
+            __jn = __jn + 1
+        jn = __jn % 36
+        if jn == 0:
+            jn = 36
+        rg = jn // 3
+        rn = jn % 3
+        if rn == 0:
+            rg = rg - 1
+            rn = 3
+        rg = rg + 1
+        xu = 支("戌")
+        junJi = xu + (rg - 1)
+        junJiPoint = Get间辰Point("{}".format(junJi))
+        __junJi = '<font color="green"><b>臣基</b></font>'
+        self.set(__junJi, junJiPoint)
+
+    def get民基(self):
+        __jn = self.三基积年 + self.year
+        if self.year < 0:
+            __jn = __jn + 1
+        jn = __jn % 12
+        if jn == 0:
+            jn = 12
+        xu = 支("戌")
+        junJi = xu + (jn - 1)
+        junJiPoint = Get间辰Point("{}".format(junJi))
+        __junJi = '<font color="green"><b>民基</b></font>'
+        self.set(__junJi, junJiPoint)
+
     def get五福(self):
         # http://www.fengshui-168.com/thread-45937-1-1.html?_dsign=6ee23359
         __五福太乙积年 = 12607
@@ -612,10 +654,29 @@ td{
                     JianChenPoint(0, 0), JianChenPoint(0, 4),
                     JiuGongPoint(2, 2)]
         __五福太乙Point = __五福太乙宫组[__五福太乙所在宫数 - 1]
-        self.header = '{}<div><font color="#A52A2A">五福入宫{}年</font></div>'.format(
-            self.header, __入元数)
+        __五福所主 = ["利士卒", "利君王", "利公侯宰臣", "利后妃", "利太子", "利庶民", "利师帅",
+                  "利上将军", "利中将军", "利下将军"]
+        __header = '{}<div><font color="#A52A2A">五福入宫{}年 {}</font></div>'
+        self.header = __header.format(self.header, __入元数, __五福所主[__入元数 % 10])
         __五福 = '<div><font color="#A52A2A"><b>五福</b></font></div >'
         self.set(__五福, __五福太乙Point)
+
+    def get大游(self):
+        __大游积年 = 12607
+        y = self.year
+        __积算 = __大游积年 + y
+        if y < 0:
+            __积年 = __大游积年 + 1 + y
+        __入纪元数 = __积算 % 288
+        if __入纪元数 == 0:
+            __入纪元数 = 228
+        __入元周数 = __入纪元数 // 36
+        __入元数 = __入纪元数 % 36
+        if __入元数 == 0:
+            __入元周数 = __入元周数 - 1
+            __入元数 = 36
+        __大游太乙所在宫数 = __入元周数 + 1
+        7, 8, 9, 1, 2, 3, 4, 6
 
 
 class YueJiShiPan(ShiPan):
@@ -630,6 +691,7 @@ class YueJiShiPan(ShiPan):
             __积年 = __积年 + 1
         __积算 = __积年 * 12 + 2 + m
         self.积算 = __积算
+        print(__积算)
 
         __年干支 = 干支(干("甲"), 支("子")) + ((__积年 + 1) % 60 - 1)
         __月干支 = 干支(干("甲"), 支("子")) + (__积算 % 60 - 1)
@@ -643,8 +705,11 @@ class RiJiShiPan(ShiPan):
         super().__init__(y, m, d)
 
     def init(self):
-        __基准积日 = 708011105
-        __基准时间 = datetime.datetime.strptime("1900-12-21 00:00:00",
+        # __基准积日 = 708011105
+        # __基准时间 = datetime.datetime.strptime("1900-12-21 00:00:00",
+        #                                     "%Y-%m-%d %H:%M:%S")
+        __基准积日 = 0
+        __基准时间 = datetime.datetime.strptime("1900-06-19 00:00:00",
                                             "%Y-%m-%d %H:%M:%S")
         y = self.year
         m = self.month
@@ -700,111 +765,7 @@ class ShiJiShiPan(ShiPan):
         self.header = "{} <div>干支: {} </div> <div>时计太乙</div>".format(
             self.header, siZhu)
 
-        # 以下代码为旧代码，不再使用
-#         y = self.year
-#         __积年 = self.太乙积年 + y - 1
-#         # 前一年冬至前一日积日
-#         __积日 = __积年 * (self.岁实整数 * self.岁实分母 + self.岁实分子) // self.岁实分母
-#         __冬至前一日干支 = (干支(干("甲"), 支("子")) + (__积日 % 60 - 1))
-# 
-#         conn = sqlite3.connect(DB)
-#         c = conn.cursor()
-#         cursor = c.execute('select solarmonth, solarday, solarhours, '
-#                            'ganzhiday from litable where solaryear={} and '
-#                            'jiqi="冬至"'.format(y - 1))
-#         row = cursor.fetchall()[0]
-#         solarmonth = int(row[0])
-#         solarday = int(row[1])
-#         solarhours = row[2]
-#         ganzhiday = row[3][0:2]
-#         conn.close()
-# 
-#         # 校正误差
-#         __冬到前一日实际干支 = 干支(干(ganzhiday[0]), 支(ganzhiday[1])) + (-1)
-#         __积日 = __积日 - (__冬至前一日干支 - __冬到前一日实际干支)
-# 
-#         __冬至前一日Time = datetime.datetime.strptime(
-#             "{0}-{1:02d}-{2:02d} {3}".format(
-#                 y - 1, solarmonth, solarday, "00:00:00"),
-#             "%Y-%m-%d %H:%M:%S") - datetime.timedelta(days=1)
-# 
-#         __前一日Time = datetime.datetime.strptime(
-#             "{0}-{1:02d}-{2:02d} {3:02d}:{4:02d}".format(
-#                 self.year, self.month, self.day, 0, 0),
-#             "%Y-%m-%d %H:%M") - datetime.timedelta(days=1)
-# 
-#         __积日 = __积日 + (__前一日Time - __冬至前一日Time).days
-#         __积时 = __积日 * 12 + (self.hour + 1) // 2 + 1
-#         self.积算 = __积时
-# 
-#         # 获取年月干支
-#         conn = sqlite3.connect(DB)
-#         c = conn.cursor()
-#         cursor = c.execute(
-#             "select solaryear, solarmonth, solarday, solarhours, ganzhiyear,"
-#             "ganzhimonth  from litable where solaryear>={} "
-#             "and solaryear<={}".format(y - 1, y + 1))
-#         siZhu = ""
-#         for row in cursor:
-#             solaryear = int(row[0])
-#             solarmonth = int(row[1])
-#             solarday = int(row[2])
-#             solarhours = row[3]
-#             ganzhiyear = row[4][0:2]
-#             ganzhimonth = row[5][0:2]
-#             tmpTime = datetime.datetime.strptime(
-#                 "{0}-{1:02d}-{2:02d} {3}".format(
-#                     solaryear, solarmonth, solarday, solarhours),
-#                 "%Y-%m-%d %H:%M:%S")
-#             __当日Time = datetime.datetime.strptime(
-#                 "{0}-{1:02d}-{2:02d} {3:02d}:{4:02d}:{5:02d}".format(
-#                     self.year,
-#                     self.month,
-#                     self.day,
-#                     self.hour,
-#                     self.minute,
-#                     self.sec),
-#                 "%Y-%m-%d %H:%M:%S")
-#             if __当日Time == tmpTime:
-#                 siZhu = "{} {}".format(ganzhiyear, ganzhimonth)
-#                 break
-#             if __当日Time < tmpTime:
-#                 break
-#             siZhu = "{} {}".format(ganzhiyear, ganzhimonth)
-#         conn.close()
-#         __日干支 = 干支(干("甲"), 支("子")) + ((__积日 + 1) % 60 - 1)
-#         if self.hour == 23:
-#             __日干支 = __日干支 + 1
-#         __时干支 = 干支(干("甲"), 支("子")) + (__积时 % 60 - 1)
-#         siZhu = "{} {} {}".format(siZhu, __日干支, __时干支)
-#         # 求空亡
-#         __旬首 = __日干支.支 + (干("甲") - __日干支.干)
-#         siZhu = '{} (甲{}旬，<font color="red">{}、{}</font>空亡)'.format(
-#             siZhu, __旬首, __旬首 + (-2), __旬首 + (-1))
-#         self.header = "{} <div>干支: {} </div> <div>时计太乙</div>".format(
-#             self.header, siZhu)
-
     def is阳遁(self):
-#         conn = sqlite3.connect(DB)
-#         c = conn.cursor()
-# 
-#         # 冬至
-#         querySql = ("select solaryear, solarmonth, solarday, solarhours from "
-#                     "litable where solaryear={} and jiqi=\"冬至\"".format(
-#                         self.year))
-#         cursor = c.execute(querySql)
-#         row = cursor.fetchall()[0]
-#         __冬至Time = datetime.datetime.strptime("{0}-{1:02d}-{2:02d} {3}".format(
-#             row[0], int(row[1]), int(row[2]), row[3]), "%Y-%m-%d %H:%M:%S")
-#         # 夏至
-#         querySql = ("select solaryear, solarmonth, solarday, solarhours from "
-#                     "litable where solaryear={} and jiqi=\"夏至\"".format(
-#                         self.year))
-#         cursor = c.execute(querySql)
-#         row = cursor.fetchall()[0]
-#         __夏至Time = datetime.datetime.strptime("{0}-{1:02d}-{2:02d} {3}".format(
-#             row[0], int(row[1]), int(row[2]), row[3]), "%Y-%m-%d %H:%M:%S")
-#         conn.close()
         c = eacal.EACal(zh_s=True)
         __冬至Time = c.get_specified_solar_term(self.year, 21)[2].replace(
             tzinfo=None)
@@ -850,7 +811,8 @@ class ShiJiShiPan(ShiPan):
 
 
 if __name__ == "__main__":
-    a = ShiJiShiPan(2018, 8, 10, 22, 23, 13, "寅")
+    a = RiJiShiPan(2018,8,18)
+    print(a)
 #     print(a)
 #     print(a.主算)
     # print(支(1))

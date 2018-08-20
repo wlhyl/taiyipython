@@ -4,7 +4,7 @@ from PyQt5 import QtWidgets
 from PyQt5 import QtGui
 from PyQt5 import QtCore
 from PyQt5.QtWebEngineWidgets import QWebEngineView
-from shipan.shipan import ShiPan, YueJiShiPan, RiJiShiPan, ShiJiShiPan
+from shipan.shipan import NianJiShiPan, YueJiShiPan, RiJiShiPan, ShiJiShiPan
 
 # Create application
 app = QtWidgets.QApplication(sys.argv)
@@ -24,15 +24,6 @@ textBrowser = QWebEngineView()
 # textBrowser = QtWidgets.QTextBrowser()
 layout.addWidget(textBrowser)
 
-# font=QtGui.QFont()
-# font.setPixelSize(18)
-# textBrowser.setFont(font)
-# font := gui.NewQFont()
-# font.SetPixelSize(18)
-# textBrowser.SetFont(font)
-# //textBrowser.SetLineWidth(1000)
-# layout.AddWidget(textBrowser, 0, 0)
-
 # 设置右则面板
 rightWidget = QtWidgets.QWidget()
 rightWidget.setFixedWidth(100)
@@ -41,12 +32,6 @@ layout.addWidget(rightWidget)
 # 为右则面板使用水平布局
 rightVBoxLayout = QtWidgets.QVBoxLayout()
 rightWidget.setLayout(rightVBoxLayout)
-#
-# // 设置输入验证
-# //	regx := core.NewQRegExp()
-# //	regx.SetPattern("^(0|[1-9][0-9]*|-[1-9][0-9]*)$")
-# //	validator := gui.NewQRegExpValidator(nil)
-# //	validator.SetRegExp(regx)
 #
 yearInput = QtWidgets.QLineEdit()
 yearInput.setPlaceholderText("年 ")
@@ -134,7 +119,7 @@ def 年计():
                                           QtWidgets.QMessageBox.Ok,
                                           QtWidgets.QMessageBox.Ok)
         return
-    s = ShiPan(year)
+    s = NianJiShiPan(year)
     # print(string(shiPan))
     textBrowser.setHtml("{}".format(s))
     # textBrowser.setText("{}".format(s))
@@ -201,7 +186,7 @@ def 时计():
     hour = int("0{}".format(hourInput.text()))
     minutes = int("0{}".format(minutesInput.text()))
     second = int("0{}".format(secondInput.text()))
-    if year < 1920 or year > 2100 or \
+    if year < 1900 or year > 2100 or \
             month < 1 or month > 12 or \
             day < 1 or day > 31 or \
             hour < 0 or hour > 23 or \
@@ -276,63 +261,6 @@ def helpOnclick():
 button.clicked.connect(onclick)
 helpButton.clicked.connect(helpOnclick)
 
-
-# button.ConnectClicked(func(checked bool) {
-# 	yearString := yearInput.Text()
-# 	//			year, _ := strconv.Atoi(yearString)
-# 	//			if year == 0 {
-# 	//				widgets.QMessageBox_Information(nil, "OK", "无此公元纪年",
-# 	//					widgets.QMessageBox__Ok, widgets.QMessageBox__Ok)
-# 	//				return
-# 	//			}
-#
-# 	//		monthString := monthInput.CurrentText()
-# 	monthString := monthInput.Text()
-# 	dayString := dayInput.Text()
-# 	hourString := hourInput.Text()
-# 	minutesString := minutesInput.Text()
-#
-# 	year, _ := strconv.Atoi(yearString)
-# 	month, _ := strconv.Atoi(monthString)
-# 	day, _ := strconv.Atoi(dayString)
-# 	hour, _ := strconv.Atoi(hourString)
-# 	minutes, _ := strconv.Atoi(minutesString)
-#
-# 	if year < 1920 || year > 2100 || month < 1 || month > 12 || day < 1 || day > 31 || hour < 0 || hour > 23 || minutes < 0 || minutes > 59 {
-# 		widgets.QMessageBox_Information(nil, "OK", "输入时间不正确",
-# 			widgets.QMessageBox__Ok, widgets.QMessageBox__Ok)
-# 		return
-#
-# 	}
-# 	monthString = fmt.Sprintf("%02d", month)
-# 	dayString = fmt.Sprintf("%02d", day)
-# 	hourString = fmt.Sprintf("%02d", hour)
-# 	minutesString = fmt.Sprintf("%02d", minutes)
-#
-# 	timeString := fmt.Sprintf("%s-%s-%s %s:%s", yearString, monthString, dayString, hourString, minutesString)
-#
-# 	_, err := time.Parse("2006-01-02 15:04", timeString)
-# 	if err != nil {
-# 		widgets.QMessageBox_Information(nil, "OK", "没有这个时间"+timeString,
-# 			widgets.QMessageBox__Ok, widgets.QMessageBox__Ok)
-# 		return
-# 	}
-#
-# 	s := shipan.New(year, month, day, hour, minutes)
-# 	//		s.GetWidget(scene)
-# 	//		view.Viewport().Update()
-# 	//		scene.Update2(0, 0, 100, 100)
-# 	//		textBrowser.scene
-# 	//		view.Viewport().UpdateDefault()
-# 	//		var layoutView = widgets.NewQVBoxLayout()
-# 	//		layoutView.AddWidget(s.GetWidget(), 0, 0)
-# 	//		textBrowser.SetLayout(layoutView)
-# 	//s.Get太乙(year)
-# 	//		textBrowser.SetText(s.String())
-# 	//			textBrowser.SetHtml(s.String())
-# 	textBrowser.SetHtml(s.String())
-# })
-#
 # // Set main widget as the central widget of the window
 window.setCentralWidget(mainWidget)
 #
