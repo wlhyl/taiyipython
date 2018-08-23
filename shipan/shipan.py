@@ -811,8 +811,9 @@ class ShiJiShiPan(ShiPan):
 
 
 if __name__ == "__main__":
-    a = RiJiShiPan(2018,8,18)
-    print(a)
+    for i in range(0, 73):
+        a = NianJiShiPan(2044 + i)
+        print("{},{}".format(a.主算, a.客算))
 #     print(a)
 #     print(a.主算)
     # print(支(1))

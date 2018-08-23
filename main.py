@@ -11,7 +11,7 @@ app = QtWidgets.QApplication(sys.argv)
 
 # Create main window
 window = QtWidgets.QMainWindow()
-window.setWindowTitle("时计太乙")
+window.setWindowTitle("太乙")
 
 # Create main layout
 layout = QtWidgets.QHBoxLayout()
