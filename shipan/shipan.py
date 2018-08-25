@@ -1,13 +1,8 @@
 import datetime
 # import sqlite3
-import os
 import eacal
 from ganzhiwuxin import *
-
-if __name__ == "__main__":
-    from point import *
-else:
-    from .point import *
+from shipan.point import *
 
 # DB = os.path.dirname(os.path.realpath(__file__)) + '/data/lifa.db'
 
@@ -122,6 +117,23 @@ td{
 
     def is阳遁(self):
         return True
+
+    def shuType(self, n):
+        t = []
+        if n > 10 and n % 10 > 5:
+            t.append("三才足数")
+        if n < 10:
+            t.append("无天")
+        if n % 10 < 5:
+            t.append("无地")
+        if n % 10 == 0:
+            t.append("无人")
+        to_type = {1: "杂阴", 2: "纯阴", 3: "纯阳", 4: "杂阳", 6: "纯阴", 7: "杂阴", 8: "杂阳", 9: "纯阳",
+                   11: "阴中重阳", 12: "下和", 13: "杂重阳", 14: "上和", 16: "下和", 17: "阴中重阳", 18: "上和", 19: "杂重阳",
+                   22: "纯阴", 23: "次和", 24: "杂重阴", 26: "纯阴", 27: "下和", 28: "杂重阴", 29: "次和", 31: "杂重阳",
+                   32: "次和", 33: "纯阳", 34: "下和", 37: "杂重阳", 38: "下和", 39: "纯阳"}
+        t.append(to_type.get(n, None))
+        return [i for i in t if i is not None]
 
     def get八门(self):
         __积算 = self.积算
@@ -259,8 +271,9 @@ td{
         self.主参将 = Get九宫Point(__主参将宫数)
         self.set(__主参将, self.主参将)
 
-        self.header = '{}<div><font color="red">主算:{}</font></div>'.format(
-            self.header, __主算)
+        __主算_type = self.shuType(__主算)
+        self.header = '{}<div><font color="red">主算:{} {}</font></div>'.format(
+            self.header, __主算, "、".join(__主算_type))
         self.主算 = __主算
 
     def get始击(self):
@@ -304,9 +317,9 @@ td{
         __客参将宫数 = (__客大将宫数 * 3) % 10
         self.客参将 = Get九宫Point(__客参将宫数)
         self.set(__客参将, self.客参将)
-
-        self.header = '{}<div><font color="red">客算:{}</font></div>'.format(
-            self.header, __客算)
+        __客算_type = self.shuType(__客算)
+        self.header = '{}<div><font color="red">客算:{} {}</font></div>'.format(
+            self.header, __客算, "、".join(__客算_type))
         self.客算 = __客算
 
     def get定目(self):
@@ -356,9 +369,9 @@ td{
         __定参将宫数 = (__定大将宫数 * 3) % 10
         self.定参将 = Get九宫Point(__定参将宫数)
         self.set(__定参将, self.定参将)
-
-        self.header = '{}<div><font color="red">定算:{}</font></div>'.format(
-            self.header, __定算)
+        __定算_type = self.shuType(__定算)
+        self.header = '{}<div><font color="red">定算:{} {}</font></div>'.format(
+            self.header, __定算, "、".join(__定算_type))
         self.定算 = __定算
 
     def get格局(self):
@@ -676,7 +689,7 @@ class NianJiShiPan(ShiPan):
             __入元周数 = __入元周数 - 1
             __入元数 = 36
         __大游太乙所在宫数 = __入元周数 + 1
-        7, 8, 9, 1, 2, 3, 4, 6
+        # 7, 8, 9, 1, 2, 3, 4, 6
 
 
 class YueJiShiPan(ShiPan):
